@@ -22,7 +22,7 @@
       <ul class="nav-links">
         <li><a href="#about">About</a></li>
         <li><a href="#menu">Menu</a></li>
-        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#" onclick="openOrders(); return false;">Place Order</a></li>
         
         <li>
           <a
@@ -31,11 +31,6 @@
             style="font-size: 1.3rem; text-decoration: none"
             >📸</a
           >
-        </li>
-        <li>
-          <button class="orders-nav-btn" onclick="openOrders()" aria-label="Orders">
-            🧾<span class="orders-badge" id="ordersBadge">0</span>
-          </button>
         </li>
         <li>
           <button class="cart-nav-btn" onclick="openCart()" aria-label="Cart">
@@ -358,7 +353,7 @@
       <ul class="footer-links">
         <li><a href="#about">About</a></li>
         <li><a href="#menu">Menu</a></li>
-        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#" onclick="openOrders(); return false;">Place Order</a></li>
         
         <li>
           <a href="https://www.instagram.com/tikkastation.om/" target="_blank"
@@ -522,7 +517,7 @@
           📞 Expect a call from us soon.
         </p>
         <button class="modal-close-btn" onclick="closeModal()">
-          Back to Menu
+          Back to Home
         </button>
       </div>
     </div>
@@ -533,7 +528,7 @@
         <div class="modal-icon">🧾</div>
         <h2>Your Placed Orders</h2>
         <p style="color:#bbb; font-size:0.95rem; margin-bottom:12px">Orders placed from this browser are shown below.</p>
-        <div id="placedOrdersList" style="max-height:320px; overflow:auto; text-align:left"></div>
+        <div id="placedOrdersList" class="orders-table-container" style="max-height:320px; overflow:auto; text-align:left"></div>
         <p style="font-size:0.82rem; color: #bbb">Orders persist in your browser's storage.</p>
         <div style="display:flex; gap:8px; justify-content:center; margin-top:12px">
           <button class="modal-close-btn" onclick="closeOrders()">Close</button>

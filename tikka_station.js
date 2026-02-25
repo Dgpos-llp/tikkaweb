@@ -452,15 +452,36 @@
           container.innerHTML = '<div style="text-align:center; padding:24px; color:#ddd">No orders yet.</div>';
           return;
         }
-        container.innerHTML = orders
-          .map(o => {
-            const d = new Date(o.createdAt);
-            const when = d.toLocaleString();
-            const items = (o.items || []).map(it => `<div style="display:flex;justify-content:space-between"><span>${it.qty}× ${it.name}</span><span>—</span></div>`).join("");
-            const info = o.pickupInfo ? `<div style="font-size:0.9rem; color:#bbb; margin-top:6px">👤 ${o.pickupInfo.name} • 📞 ${o.pickupInfo.mobile}</div>` : "";
-            return `<div style="border-bottom:1px solid rgba(255,255,255,0.06); padding:10px 0"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Order</strong><small style=\"color:#aaa\">${when}</small></div>${items}${info}<div style=\"margin-top:8px;color:#ccc;font-size:0.95rem\">Type: ${o.orderType}</div></div>`;
-          })
-          .join('');
+        // build table markup
+        let html = '<table class="placed-orders-table">' +
+                   '<thead><tr>' +
+                     '<th>#</th>' +
+                     '<th>Date &amp; Time</th>' +
+                     '<th>Order Type</th>' +
+                     '<th>Items Ordered</th>' +
+                   '</tr></thead><tbody>';
+        orders.forEach((o, idx) => {
+          const d = new Date(o.createdAt);
+          const when = d.toLocaleString();
+          const itemsList = (o.items || [])
+            .map(it => `<li>${it.qty}× ${it.name}</li>`)
+            .join('');
+          html += `<tr class="placed-order-entry" data-idx="${idx}">
+                    <td>${idx+1}</td>
+                    <td>${when}</td>
+                    <td>${o.orderType}</td>
+                    <td><ul style="margin:0; padding-left:18px;">${itemsList}</ul></td>
+                   </tr>`;
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+        // attach click handlers to rows
+        container.querySelectorAll('.placed-order-entry').forEach(el => {
+          el.addEventListener('click', () => {
+            const idx = el.getAttribute('data-idx');
+            showOrderReceipt(orders[idx]);
+          });
+        });
       }
 
       function openOrders() {
@@ -468,6 +489,31 @@
         if (!m) return;
         renderPlacedOrders();
         m.classList.add('open');
+      }
+
+      // display receipt in confirm modal for a historic order
+      function showOrderReceipt(order) {
+        if (!order) return;
+        // close orders modal if open
+        const oModal = document.getElementById('ordersModal');
+        if (oModal) oModal.classList.remove('open');
+        const rows = (order.items || [])
+          .map(i => `<div class="os-item"><span>${i.qty}× ${i.name}</span><span>TBC</span></div>`)
+          .join("");
+        let extraHtml = "";
+        if (order.pickupInfo) {
+          extraHtml = `<div class="os-extra">
+            <span>👤 ${order.pickupInfo.name}</span>
+            <span>📞 +968 ${order.pickupInfo.mobile}</span>
+            <span>🚗 ${order.pickupInfo.vehicle}</span>
+            <span>💳 ${order.pickupInfo.payment}</span>
+          </div>`;
+        }
+        const receiptHtml = `<h4>Order — ${order.orderType}</h4>${rows}${extraHtml}<div class="os-total"><span>Total</span><span>To be confirmed</span></div>`;
+        document.getElementById("orderSummary").innerHTML = receiptHtml;
+        const heading = document.querySelector('#confirmModal h2');
+        if (heading) heading.textContent = 'Order Details';
+        document.getElementById("confirmModal").classList.add("open");
       }
 
       function closeOrders() {
@@ -545,6 +591,9 @@
       }
 
       function closeModal() {
+        // restore heading text to default
+        const heading = document.querySelector('#confirmModal h2');
+        if (heading) heading.textContent = 'Order Received!';
         document.getElementById("confirmModal").classList.remove("open");
         // Clear cart completely
         Object.keys(cart).forEach((id) => {
@@ -557,7 +606,8 @@
         });
         cart = {};
         syncCart();
-        document.getElementById("menu").scrollIntoView({ behavior: "smooth" });
+        // after closing, jump to top of page (home)
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
 
