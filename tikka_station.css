@@ -119,6 +119,8 @@
         position: absolute;
         inset: 0;
         background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        /* allow clicks on buttons beneath the decorative overlay */
+        pointer-events: none;
       }
       .hero-logo {
         width: 900px;
@@ -407,6 +409,15 @@
         font-size: 1.02rem;
         margin-bottom: 4px;
       }
+      /* Arabic name under English title */
+      .menu-card-body .arabic-name {
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.85rem;
+        color: #555;
+        line-height: 1.2;
+        margin: 2px 0 8px;
+        direction: rtl;
+      }
       .menu-card-body p {
         font-size: 0.8rem;
         color: #8a7a6a;
@@ -417,6 +428,11 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+      }
+      .price {
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: #e8541a;
       }
       .price-placeholder {
         font-size: 0.75rem;
