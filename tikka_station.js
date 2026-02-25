@@ -394,6 +394,15 @@
 
       function showOrderConfirmation(pickupInfo) {
         const items = Object.values(cart).filter((i) => i.qty > 0);
+        // Save placed order to localStorage so user can view it later
+        const placedOrder = {
+          id: Date.now(),
+          createdAt: new Date().toISOString(),
+          orderType,
+          items: items.map(i => ({ id: i.id, name: i.name, qty: i.qty })),
+          pickupInfo: pickupInfo || null,
+        };
+        savePlacedOrder(placedOrder);
         const rows = items
           .map(
             (i) =>
@@ -412,6 +421,73 @@
         document.getElementById("orderSummary").innerHTML =
           `<h4>Order — ${orderType}</h4>${rows}${extraHtml}<div class="os-total"><span>Total</span><span>To be confirmed</span></div>`;
         document.getElementById("confirmModal").classList.add("open");
+      }
+
+      // Persist placed orders in localStorage and render them
+      function savePlacedOrder(order) {
+        try {
+          const raw = localStorage.getItem("placedOrders") || "[]";
+          const arr = JSON.parse(raw);
+          arr.unshift(order);
+          localStorage.setItem("placedOrders", JSON.stringify(arr));
+          syncPlacedOrdersBadge();
+        } catch (e) {
+          console.error("Failed to save placed order", e);
+        }
+      }
+
+      function getPlacedOrders() {
+        try {
+          return JSON.parse(localStorage.getItem("placedOrders") || "[]");
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function renderPlacedOrders() {
+        const container = document.getElementById("placedOrdersList");
+        if (!container) return;
+        const orders = getPlacedOrders();
+        if (!orders.length) {
+          container.innerHTML = '<div style="text-align:center; padding:24px; color:#ddd">No orders yet.</div>';
+          return;
+        }
+        container.innerHTML = orders
+          .map(o => {
+            const d = new Date(o.createdAt);
+            const when = d.toLocaleString();
+            const items = (o.items || []).map(it => `<div style="display:flex;justify-content:space-between"><span>${it.qty}× ${it.name}</span><span>—</span></div>`).join("");
+            const info = o.pickupInfo ? `<div style="font-size:0.9rem; color:#bbb; margin-top:6px">👤 ${o.pickupInfo.name} • 📞 ${o.pickupInfo.mobile}</div>` : "";
+            return `<div style="border-bottom:1px solid rgba(255,255,255,0.06); padding:10px 0"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Order</strong><small style=\"color:#aaa\">${when}</small></div>${items}${info}<div style=\"margin-top:8px;color:#ccc;font-size:0.95rem\">Type: ${o.orderType}</div></div>`;
+          })
+          .join('');
+      }
+
+      function openOrders() {
+        const m = document.getElementById('ordersModal');
+        if (!m) return;
+        renderPlacedOrders();
+        m.classList.add('open');
+      }
+
+      function closeOrders() {
+        const m = document.getElementById('ordersModal');
+        if (!m) return;
+        m.classList.remove('open');
+      }
+
+      function clearPlacedOrders() {
+        if (!confirm('Clear all placed orders from this browser?')) return;
+        localStorage.removeItem('placedOrders');
+        renderPlacedOrders();
+        syncPlacedOrdersBadge();
+      }
+
+      function syncPlacedOrdersBadge() {
+        const badge = document.getElementById('ordersBadge');
+        if (!badge) return;
+        const count = getPlacedOrders().length || 0;
+        badge.textContent = count;
       }
 
       function submitPickupForm() {
@@ -501,7 +577,7 @@
       buildMenu();
       setTimeout(() => {
         document
-          .querySelectorAll(".gallery-item,.hours-card,.contact-item")
+          .querySelectorAll(".gallery-item")
           .forEach((el) => {
             el.style.opacity = 0;
             el.style.transform = "translateY(20px)";
@@ -509,4 +585,8 @@
             obs.observe(el);
           });
       }, 100);
+        // Initialize placed orders badge
+        setTimeout(() => {
+          try { syncPlacedOrdersBadge(); } catch(e) { /* ignore */ }
+        }, 200);
     

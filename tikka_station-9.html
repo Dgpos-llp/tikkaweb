@@ -23,8 +23,6 @@
         <li><a href="#about">About</a></li>
         <li><a href="#menu">Menu</a></li>
         <li><a href="#gallery">Gallery</a></li>
-        <li><a href="#hours">Hours</a></li>
-        <li><a href="#contact">Contact</a></li>
         
         <li>
           <a
@@ -33,6 +31,11 @@
             style="font-size: 1.3rem; text-decoration: none"
             >📸</a
           >
+        </li>
+        <li>
+          <button class="orders-nav-btn" onclick="openOrders()" aria-label="Orders">
+            🧾<span class="orders-badge" id="ordersBadge">0</span>
+          </button>
         </li>
         <li>
           <button class="cart-nav-btn" onclick="openCart()" aria-label="Cart">
@@ -343,101 +346,9 @@
       </div>
     </section> -->
 
-    <!-- HOURS -->
-    <section class="hours-section" id="hours">
-      <div class="hours-inner">
-        <div class="section-label">
-          <p class="eyebrow">We're Open</p>
-          <h2>Opening Hours</h2>
-        </div>
-        <div class="hours-grid">
-          <div class="hours-card">
-            <h4>Weekdays</h4>
-            <div class="hours-row">
-              <span>Monday – Friday</span><span>9:00 AM – 11:00 PM</span>
-            </div>
-            <div class="hours-row">
-              <span>Dine In</span><span>✓ Available</span>
-            </div>
-            <div class="hours-row">
-              <span>Pickup</span><span>✓ Available</span>
-            </div>
-            <div class="hours-row">
-              <span>Delivery</span><span>✓ Available</span>
-            </div>
-          </div>
-          <div class="hours-card">
-            <h4>Weekends</h4>
-            <div class="hours-row">
-              <span>Saturday – Sunday</span><span>9:00 AM – 12:00 AM</span>
-            </div>
-            <div class="hours-row">
-              <span>Dine In</span><span>✓ Available</span>
-            </div>
-            <div class="hours-row">
-              <span>Pickup</span><span>✓ Available</span>
-            </div>
-            <div class="hours-row">
-              <span>Delivery</span><span>✓ Available</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- RESERVATION -->
 
-    <!-- CONTACT -->
-    <section class="contact-section" id="contact">
-      <div class="section-label">
-        <p class="eyebrow">Find Us</p>
-        <h2>Get in Touch</h2>
-      </div>
-      <div class="contact-inner">
-        <div class="contact-info">
-          <h3>We'd love to hear from you</h3>
-          <div class="contact-item">
-            <div class="contact-icon">📍</div>
-            <div class="contact-text">
-              <strong>Location</strong><span>Muscat, Oman</span>
-            </div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-icon">📞</div>
-            <div class="contact-text">
-              <strong>Phone</strong><span>+968 XXXX XXXX</span>
-            </div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-icon">📸</div>
-            <div class="contact-text">
-              <strong>Instagram</strong
-              ><span
-                ><a
-                  href="https://www.instagram.com/tikkastation.om/"
-                  target="_blank"
-                  style="color: var(--orange); text-decoration: none"
-                  >@tikkastation.om</a
-                ></span
-              >
-            </div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-icon">🕐</div>
-            <div class="contact-text">
-              <strong>Hours</strong><span>Daily 9:00 AM – 11:00 PM</span>
-            </div>
-          </div>
-        </div>
-        <div class="map-placeholder">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.5!2d58.593!3d23.588!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDM1JzE2LjgiTiA1OMKwMzUnMzMuNiJF!5e0!3m2!1sen!2som!4v1620000000000!5m2!1sen!2som"
-            allowfullscreen
-            loading="lazy"
-          ></iframe>
-        </div>
-      </div>
-    </section>
 
     <footer>
       <img
@@ -448,8 +359,6 @@
         <li><a href="#about">About</a></li>
         <li><a href="#menu">Menu</a></li>
         <li><a href="#gallery">Gallery</a></li>
-        <li><a href="#hours">Hours</a></li>
-        <li><a href="#contact">Contact</a></li>
         
         <li>
           <a href="https://www.instagram.com/tikkastation.om/" target="_blank"
@@ -615,6 +524,21 @@
         <button class="modal-close-btn" onclick="closeModal()">
           Back to Menu
         </button>
+      </div>
+    </div>
+
+    <!-- PLACED ORDERS MODAL -->
+    <div class="modal-overlay" id="ordersModal">
+      <div class="modal">
+        <div class="modal-icon">🧾</div>
+        <h2>Your Placed Orders</h2>
+        <p style="color:#bbb; font-size:0.95rem; margin-bottom:12px">Orders placed from this browser are shown below.</p>
+        <div id="placedOrdersList" style="max-height:320px; overflow:auto; text-align:left"></div>
+        <p style="font-size:0.82rem; color: #bbb">Orders persist in your browser's storage.</p>
+        <div style="display:flex; gap:8px; justify-content:center; margin-top:12px">
+          <button class="modal-close-btn" onclick="closeOrders()">Close</button>
+          <button class="modal-close-btn" onclick="clearPlacedOrders()" style="background:#e8541a; color:#fff">Clear All</button>
+        </div>
       </div>
     </div>
 
