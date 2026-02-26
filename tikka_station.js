@@ -1,6 +1,6 @@
 
       // debug: alert when the script actually executes
-      alert('tikka_station.js has been executed');
+      // alert('tikka_station.js has been executed');
       console.log('tikka_station.js loaded');
       window.onerror = (msg, src, line, col, error) => {
         console.error('Global error', msg, src, line, col, error);
